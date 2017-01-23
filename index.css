@@ -1,0 +1,46 @@
+body {
+	font-family: Arial, "Times New Roman", Serif;
+	padding: 5% 0 5% 0;
+	background-color: #cccc00;
+}
+
+body div {
+	background-color: #c9c9c9;
+	border: 1px solid white;
+}
+
+.highlight {
+	border: 2px solid green;
+}
+
+#question, #answer {
+	min-height: 250;
+}
+
+button {
+	width: 75%;
+	font-weight: bold;
+	margin: 5px 0 5px 0;
+}
+
+#right > button {
+	color: green;
+}
+
+#wrong > button {
+	color: red;
+}
+
+#upload {
+	display: none;
+}
+
+#edit {
+	display: none;
+	margin-top: 10px;
+	padding-top: 10px;
+}
+
+#edit .edit-topic {
+	margin-bottom: 20px;
+}
