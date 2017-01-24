@@ -4,7 +4,7 @@ body {
 	background-color: #cccc00;
 }
 
-body div {
+div {
 	background-color: #c9c9c9;
 	border: 1px solid white;
 }
@@ -17,8 +17,19 @@ body div {
 	min-height: 250;
 }
 
-button {
-	width: 75%;
+img.img-edit, img.img-save, img.img-clear
+{
+	width: 10px;
+	height: 10px;
+}
+
+img.img-download {
+	width: 30px;
+	height: 30px;
+}
+
+
+button, a.edit-addQ {
 	font-weight: bold;
 	margin: 5px 0 5px 0;
 }
@@ -31,7 +42,7 @@ button {
 	color: red;
 }
 
-#upload {
+.noDisplay {
 	display: none;
 }
 

@@ -14,7 +14,7 @@
       <div class="row">
         <div class="col">
           <h1 class="text-md-left text-center">
-          	<a href="">Permanent </a>
+          	<a href="download.php" target="_blank">Permanent </a>
           </h1>
         </div>
         
@@ -26,12 +26,12 @@
       			<div class="col-md-3">
       				<div id="leftPanel" class="row">
       					<div class="col-sm-12 text-md-left text-center">
-      						<h3>Intro to Object Oriented Programming</h3>
+      						<p class="h5">Intro to Object Oriented Programming</p>
       					</div>
     						<div class="col text-center">
     							<form id="addFile" method="post" action="upload.php" enctype="multipart/form-data">
     								<button type="button">ADD / CHANGE</button>
-    								<input id="upload" type="file" name="userfile">
+    								<input class="upload noDisplay" type="file" name="userfile">
     							</form>
     						</div>
       				</div>
@@ -69,22 +69,47 @@
     </div>
     
     <div id="edit" class="container">
-      <div class="row">
+    	
+    	<div id="edit-top-panel" class="row noDisplay">
+    		<div class="col text-right">
+    			<!--
+  				<button id="download" type="button" class="btn btn-success">
+  					<img class="img-download" src="download.png">
+  				</button>-->
+    		</div>
+    	</div>
+    	
+      <div class="row highlight">
       	<div id="edit-main" class="col-md-11 offset-md-1">
       		<!-- 
       		<div class="row edit-topic">
       			<div class="col-sm-12">
-      				Intro to Object Oriented Programming
+      			  <div class="row justify-content-between">
+      			   <div class="col-sm-10">
+      			     Intro to Object Oriented Programming
+      			   </div>
+      			   <div class="col-sm-1 text-center">
+      			     <a class="edit-addQ badge badge-success">
+      			       +Q
+      			     </a>
+      			   </div>
+      			  </div>
       			</div>
       			<div class="col">
+      			  <hidden row>TOPic here<>
       				<div class="row">
       					<div class="col-sm-1">
       					</div>
-      					<div class="col">
+      					<div class="col edit-qtn">
       						Question 1
       					</div>
-      					<div class="col">
+      					<div class="col edit-ans">
       						ANSWER 1
+      					</div>
+      					<div class="col-sm-1">
+      					 <button class="edit-btn"><img></button>
+      					 <button class="save-btn"><img></button>
+      					 <button class="clear-btn"><img></button>
       					</div>
       				</div>
       				<div class="row">
@@ -94,23 +119,6 @@
       					</div>
       					<div class="col">
       						ANSWER 2
-      					</div>
-      				</div>
-      			</div>
-      		</div>
-      		
-      		<div class="row edit-topic">
-      			<div class="col-sm-12">
-      				Functions
-      			</div>
-      			<div class="col">
-      				<div class="row">
-      					<div class="col-sm-1"></div>
-      					<div class="col">
-      						Question
-      					</div>
-      					<div class="col">
-      						ANSWER
       					</div>
       				</div>
       			</div>

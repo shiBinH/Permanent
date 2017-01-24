@@ -1,9 +1,14 @@
 $(function(){
-	
+	/*
+	 *	escape questions and answers
+	 *	before sending to server
+	 *
+	 */
 	var TOPICS = [];
 	var QTN = [];
 	var nCorrect;
 	var $QBox = $('#qtnDisplay'), $ABox = $('#ansDisplay');
+	var TestObj;
 
 	
 	//	prevent links
@@ -11,14 +16,15 @@ $(function(){
 		console.log(e.target);
 		e.preventDefault();
 	})
+
 	
 	//	button -> upload
 	$('#addFile').on('click', 'button', function(e) {	
-		$('#upload').trigger('click');
+		$('.upload').trigger('click');
 	})
 	
 	//	handler for when a file is uploaded
-	$('#upload').on('change', function(e) {
+	$('.upload').on('change', function(e) {
 		if (!e.target.value || e.target.value.substr(-5) !== '.json') return;
 		var fData = new FormData(document.getElementById('addFile'));
 		fData.append('filename', e.target.name);
@@ -30,15 +36,37 @@ $(function(){
 			type: 'POST',
 			success: function(data, status) {
 				TOPICS = [], QTN = [], nCorrect = 0;
-				var dataObj = JSON.parse(data);
+				TestObj = JSON.parse(data);
+				var dataObj = TestObj;
 				var $edit_main = $('#edit-main');
 				$edit_main.empty();
 				
+				/*
+				 * <div id="edit-main">
+				 * 	<$row>
+				 * 		<col> TOPIC
+				 * 		<$col>
+				 * 			<$innerRow>
+				 * 				<offset col>
+				 * 				<col> question
+				 * 				<col> answer
+				 * 				<col> 
+				 * 					<button>
+				 * 						<img> 
+				 * 
+				 */
+				
 				for (type in dataObj) {
-					var $row = $('<div class="row edit-topic"><div class="col-sm-12">' + type  + '</div></div>');
-					var $col = $('<div class="col"></div>');
+					var $row = $('<div class="row edit-topic"><div class="col-sm-12"><div class="row justify-content-between"><div class="col-sm-10 font-weight-bold">' + type  + '</div><div class="col-sm-1 text-center"><a href="" class="edit-addQ badge badge-success">+Q</a></div></div></div></div>');
+					var $col = $('<div class="col"><div class="row hidden-xl-down">' + type + '</div></div>');
 					for (Q in dataObj[type]) {
-						$col.append('<div class="row"><div class="col-sm-1"></div><div class="col">' + Q + '</div><div class="col">' + dataObj[type][Q] + '</div></div>');
+						var $innerRow = $('<div class="row"></div>');	//	replace with makeRow function(?)
+						$innerRow.append('<div class="col-sm-1"></div>');
+						$innerRow.append('<div class="col edit-qtn">' + Q + '</div>');
+						$innerRow.append('<div class="col edit-ans">' + dataObj[type][Q]+'</div>');
+						$innerRow.append('<div class="col-sm-1 text-center"><button class="edit-btn"><img class="img-edit" src="edit-icon.png"></button><button class="save-btn" data-id="' + QTN.length +'"><img class="img-save" src="save-icon.png"></button><button class="clear-btn"><img class="img-clear" src="clear.png"></button></div>')
+						$innerRow.find('button:not(".edit-btn")').hide();
+						$col.append($innerRow);
 						QTN.push(new Question(Q, dataObj[type][Q], TOPICS.length));
 					}
 					$row.append($col);
@@ -49,7 +77,7 @@ $(function(){
 				var $btnsPanel = $('#btnsPanel');
 				if ($btnsPanel.children().length === 0) {
 					$btnsPanel.append(makeBtn('showAns', 'SHOW'));
-					$btnsPanel.append(makeBtn('right', 'CORRECT'));
+					$btnsPanel.append(makeBtn('right', 'RIGHT'));
 					$btnsPanel.append(makeBtn('wrong', 'WRONG'));
 					$btnsPanel.children(':not("#showAns")').hide();
 				}
@@ -58,18 +86,87 @@ $(function(){
 				$edit_main.parent().parent().show();
 				
 				function makeBtn(ID, text) {
-					var button = '<div class="col text-center"><button></button></div>';
+					var button = '<div class="col text-center"><button class="w-100"></button></div>';
 					var $button = $(button).attr('id', ID);
 					$button.children().text(text);
 					return $button;
 				}
-				
-				function makeRow(topic, topicObj){
-					var $row = $('<div class="row edit-topic"><div class="col-sm-6">' + topic  + '</div><div class="col"></div></div>');
-					
-				}
+
 			}
 		})
+	})
+	
+	//	add question handler
+	$('#edit-main').on('click', 'a.edit-addQ', function(e){
+		var $col = $(this.parentNode.parentNode.parentNode).siblings()
+		
+		var $innerRow = $('<div class="row newQ">');
+		 $innerRow.append('<div class="col-sm-1"></div>');
+		 $innerRow.append('<div class="col edit-qtn"><input class="form-control" type="text" placeholder="Question"></div>');
+		 $innerRow.append('<div class="col edit-ans"><input class="form-control" type="text" placeholder="Answer"></div>');
+		 $innerRow.append('<div class="col-sm-1 text-center"><button class="edit-btn"><img class="img-edit" src="edit-icon.png"></button><button class="save-btn"><img class="img-save" src="save-icon.png"></button><button class="clear-btn"><img class="img-save" src="clear.png"></button></div>');
+		 $innerRow.find('.img-edit').parent().hide();
+		 $col.append($innerRow);
+	})
+	
+	//	edit button handler
+	$('#edit-main').on('click', 'button.edit-btn', function(e) {
+		var $btn = $(this);
+		$btn.parent().siblings(':gt(0)').each(function(ind, col) {
+			var $col = $(col);
+			var original = $col.text();
+			var $txtbox = $('<input class="form-control" type="text">').val(original);
+			var $original = $col.hasClass('edit-qtn') ? $('<p class="hidden-xl-down">' + original + '</p>') : "";
+			$col.empty();
+			$col.append($original);
+			$col.append($txtbox);
+		})
+		$btn.hide().siblings().show();
+	})
+	
+	//	save button handler
+	$('#edit-main').on('click', 'button.save-btn', function(e) {
+		var $this = $(this);
+		
+		var $qtn = $this.parent().siblings('.edit-qtn');
+		var qtn = $qtn.children(':last').val();	//	get Q
+		var $ans = $this.parent().siblings('.edit-ans');
+		var ans = $ans.children(':last').val();	//	get A
+		var originalQ = $qtn.children(':first').html();	//	get original Q
+		var type = $this.parent().parent().siblings(':first').html();
+		
+		if (qtn === "") {	//	delete question
+			$this.parent().parent().remove();
+			delete TestObj[type][originalQ];
+			return;
+		}
+		else delete TestObj[type][originalQ];	//	delete question in TestObj
+		
+		//	escape input
+		$qtn.empty().text(qtn);
+		qtn = $qtn.html();	
+		$ans.empty().text(ans);
+		ans = $ans.html();
+		$this.prev().show();
+		$this.hide().next().hide();
+		
+		//	add to TestObj
+		TestObj[type][qtn] = ans;
+		
+		//	show download button
+		var $wrapper = $('#edit-top-panel');
+		if ($wrapper.children().children().length != 0) return;
+		$wrapper.show();
+		$wrapper.children().html('<button id="download" type="button" class="btn btn-success"><img class="img-download" src="download.png"></button>');
+		
+	})
+	
+	$('')
+	
+	//	clear button handler
+	$('#edit-main').on('click', 'button.clear-btn', function(e) {
+		var $btn = $(this)
+		$btn.parent().siblings('.edit-qtn, .edit-ans').children().val('');
 	})
 	
 	//	right,wrong button handler
