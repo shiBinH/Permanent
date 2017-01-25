@@ -55,6 +55,7 @@ $(function(){
 				 * 
 				 */
 				
+				$edit_main.append(newTopicRow());
 				for (type in dataObj) {
 					var $row = $('<div class="row edit-topic"><div class="col-sm-12"><div class="row justify-content-between"><div class="col-sm-10 font-weight-bold">' + type  + '</div><div class="col-sm-1 text-center"><button class="edit-addQ btn btn-success">+Q</button></div></div></div></div>');
 					var $col = $('<div class="col"><div class="row hidden-xl-down">' + type + '</div></div>');
@@ -127,9 +128,7 @@ $(function(){
 	//	new topic handler
 	$('#edit-top-panel').on('click', '#topic-new', function(e) {
 		$(this).hide();
-		var $row = $('<div class="row edit-topic">');
-		$row.append('<div class="col-sm-12"><div class="row justify-content-between"><div class="col-sm-10 font-weight-bold"><input type="text" class="form-control" placeholder="New topic"></div><div class="col-sm-1 text-center"><button id="topic-add" class="btn btn-success">ADD</button></div></div></div>');
-		$('#edit-main').prepend($row);
+		$('#edit-main').children(':first').show();
 	})
 	
 	//	add topic handler
@@ -138,6 +137,12 @@ $(function(){
 		var $thisParent = $(this.parentNode);
 		//	escape topic
 		var topic = $('<div>').text($this.parent().siblings().children().val()).html();
+		
+		$('#topic-new').show();
+		if (topic === "") {
+			$this.parent().parent().parent().parent().hide();
+			return;
+		}
 		$this.parent().siblings().empty().html(topic);
 		
 		var $addQBtn = $('<button>');
@@ -147,7 +152,8 @@ $(function(){
 		$col.append('<div class="row hidden-xl-down">'+ topic + '</div>');
 		$thisParent.parent().parent().after($col);
 		TestObj[topic] = new Object();
-		$('#topic-new').show();
+		
+		$('#edit-main').prepend(newTopicRow());
 	})
 	
 	//	edit button handler
@@ -239,6 +245,11 @@ $(function(){
 		$showAns.siblings().show();
 	})
 	
+	function newTopicRow() {
+		var $row = $('<div class="row edit-topic">');
+		$row.append('<div class="col-sm-12"><div class="row justify-content-between"><div class="col-sm-10 font-weight-bold"><input type="text" class="form-control" placeholder="New topic"></div><div class="col-sm-1 text-center"><button id="topic-add" class="btn btn-success">ADD</button></div></div></div>').hide();
+		return $row;
+	}
 	
 	//	display next question & answer
 	function displayNextQ() {
