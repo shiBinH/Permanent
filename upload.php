@@ -1,5 +1,4 @@
 <?php 
-  $filename = $_POST['filename'];
-  $contents = file_get_contents($_FILES[$filename]['tmp_name']);
+  $contents = file_get_contents($_FILES['userfile']['tmp_name']);
   echo htmlentities($contents, ENT_NOQUOTES);
 ?>

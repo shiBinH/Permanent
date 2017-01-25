@@ -25,11 +25,11 @@ img.img-edit, img.img-save, img.img-clear
 
 img.img-download {
 	width: 30px;
-	height: 30px;
+	height: 20px;
 }
 
 
-button, a.edit-addQ {
+button{
 	font-weight: bold;
 	margin: 5px 0 5px 0;
 }

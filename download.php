@@ -1,8 +1,12 @@
 <?php
   header('Content-Type: application/json');
-  header('Content-Disposition: attachment; filename=samplle.json');
+  header('Content-Disposition: attachment; filename=' . $_POST['filename']);
   header('Expires: 0');
   header('Cache-Control: must-revalidate');
-  $content = file_get_contents('sample.json');
+  
+  //  $out = fopen('php://output', 'w');
+  $content = $_POST['TestObj'];
   echo $content;
+  //  fwrite($out, $content);
+  //  fclose($out)
 ?>

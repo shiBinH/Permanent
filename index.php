@@ -70,18 +70,24 @@
     
     <div id="edit" class="container">
     	
-    	<div id="edit-top-panel" class="row noDisplay">
+    	<div id="edit-top-panel" class="row">
     		<div class="col text-right">
-    			<!--
+    			<!-- html added after a save
   				<button id="download" type="button" class="btn btn-success">
   					<img class="img-download" src="download.png">
-  				</button>-->
+  				</button>
+  				-->
+  				<form class="noDisplay" action="download.php" method="post">
+  					<input type="text" name="TestObj">
+  					<input type="text" name="filename">
+  				</form>
+  				<button id="topic-new" class="btn btn-primary">+Topic</button>
     		</div>
     	</div>
     	
-      <div class="row highlight">
+      <div class="row">
       	<div id="edit-main" class="col-md-11 offset-md-1">
-      		<!-- 
+      		<!-- dynamically added
       		<div class="row edit-topic">
       			<div class="col-sm-12">
       			  <div class="row justify-content-between">
@@ -89,7 +95,7 @@
       			     Intro to Object Oriented Programming
       			   </div>
       			   <div class="col-sm-1 text-center">
-      			     <a class="edit-addQ badge badge-success">
+      			     <button class="edit-addQ btn btn-success">
       			       +Q
       			     </a>
       			   </div>
