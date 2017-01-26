@@ -1,9 +1,5 @@
 $(function(){
-	/*
-	 *	escape questions and answers
-	 *	before sending to server
-	 *
-	 */
+
 	var TOPICS = [];
 	var QTN = [];
 	var nCorrect;
@@ -57,14 +53,14 @@ $(function(){
 				
 				$edit_main.append(newTopicRow());
 				for (type in dataObj) {
-					var $row = $('<div class="row edit-topic"><div class="col-sm-12"><div class="row justify-content-between"><div class="col-sm-10 font-weight-bold">' + type  + '</div><div class="col-sm-1 text-center"><button class="edit-addQ btn btn-success">+Q</button></div></div></div></div>');
+					var $row = $('<div class="row edit-topic"><div class="col-sm-12"><div class="row justify-content-between"><div class="col-sm-10 font-weight-bold">' + type  + '</div><div class="col-sm-2 text-center"><button type="button" class="edit-addQ btn btn-success">+Q</button><button type="button" class="topic-delete btn"><img class="img-delete" src="clear.png"></button></div></div></div></div>');
 					var $col = $('<div class="col"><div class="row hidden-xl-down">' + type + '</div></div>');
 					for (Q in dataObj[type]) {
 						var $innerRow = $('<div class="row"></div>');	//	replace with makeRow function(?)
 						$innerRow.append('<div class="col-sm-1"></div>');
 						$innerRow.append('<div class="col edit-qtn">' + Q + '</div>');
 						$innerRow.append('<div class="col edit-ans">' + dataObj[type][Q]+'</div>');
-						$innerRow.append('<div class="col-sm-1 text-center"><button class="edit-btn"><img class="img-edit" src="edit-icon.png"></button><button class="save-btn"><img class="img-save" src="save-icon.png"></button><button class="clear-btn"><img class="img-clear" src="clear.png"></button></div>')
+						$innerRow.append('<div class="col-sm-1 text-center"><button class="edit-btn"><img class="img-edit" src="edit-icon.png"></button><button class="save-btn"><img class="img-save" src="check.png"></button><button class="clear-btn"><img class="img-clear" src="clear.png"></button></div>')
 						$innerRow.find('button:not(".edit-btn")').hide();
 						$col.append($innerRow);
 						QTN.push(new Question(Q, dataObj[type][Q], TOPICS.length));
@@ -108,6 +104,7 @@ $(function(){
 		 $innerRow.append('<div class="col-sm-1 text-center"><button class="edit-btn"><img class="img-edit" src="edit-icon.png"></button><button class="save-btn"><img class="img-save" src="save-icon.png"></button><button class="clear-btn"><img class="img-save" src="clear.png"></button></div>');
 		 $innerRow.find('.img-edit').parent().hide();
 		 $col.append($innerRow);
+		 $innerRow.find('div.edit-qtn input').focus();
 	})
 	
 	/*
@@ -128,7 +125,7 @@ $(function(){
 	//	new topic handler
 	$('#edit-top-panel').on('click', '#topic-new', function(e) {
 		$(this).hide();
-		$('#edit-main').children(':first').show();
+		$('#edit-main').children(':first').show().find('input').focus();
 	})
 	
 	//	add topic handler
@@ -145,15 +142,25 @@ $(function(){
 		}
 		$this.parent().siblings().empty().html(topic);
 		
-		var $addQBtn = $('<button>');
-		$addQBtn.addClass('edit-addQ btn btn-success').text('+Q');
-		$this.replaceWith($addQBtn)
+		//	add "+Q" and "delete topic buttons"
+		var $btns = $('<button class="edit-addQ btn btn-success">+Q</button><button type="button" class="topic-delete btn"><img class="img-delete" src="clear.png"></button>');
+		$this.replaceWith($btns);
+		
 		var $col = $('<div class="col">');
 		$col.append('<div class="row hidden-xl-down">'+ topic + '</div>');
 		$thisParent.parent().parent().after($col);
 		TestObj[topic] = new Object();
 		
 		$('#edit-main').prepend(newTopicRow());
+	})
+	
+	//	delete topic handler
+	$('#edit-main').on('click', 'button.topic-delete', function(e) {
+		var $this = $(this);
+		var topic = $this.parent().siblings().html();
+		delete TestObj[topic];
+		$(this).closest('.edit-topic').remove();
+		$('#download').show();
 	})
 	
 	//	edit button handler
@@ -201,11 +208,8 @@ $(function(){
 			TestObj[type][qtn] = ans;
 		}
 		//	show download button
-		var $wrapper = $('#edit-top-panel');
-		if ($wrapper.children().children('#download').length != 0) return;
-		//	$wrapper.show();
-		$wrapper.children().append('<button id="download" type="button" class="btn btn-success"><img class="img-download" src="download.png"></button>');
-		
+		$this.parent().parent().parent().siblings().find('button.edit-addQ').focus();
+		$('#download').show();
 	})
 	
 	//	download handler
@@ -233,7 +237,6 @@ $(function(){
 			}
 		}
 		displayNextQ();
-
 	})
 	
 	//	show answer handler
@@ -245,9 +248,10 @@ $(function(){
 		$showAns.siblings().show();
 	})
 	
+	//	add new topic
 	function newTopicRow() {
 		var $row = $('<div class="row edit-topic">');
-		$row.append('<div class="col-sm-12"><div class="row justify-content-between"><div class="col-sm-10 font-weight-bold"><input type="text" class="form-control" placeholder="New topic"></div><div class="col-sm-1 text-center"><button id="topic-add" class="btn btn-success">ADD</button></div></div></div>').hide();
+		$row.append('<div class="col-sm-12"><div class="row justify-content-between"><div class="col-sm-10 font-weight-bold"><input type="text" class="form-control" placeholder="New topic"></div><div class="col-sm-2 text-center"><button id="topic-add" class="btn btn-success">ADD</button></div></div></div>').hide();
 		return $row;
 	}
 	
@@ -267,7 +271,6 @@ $(function(){
 		$ABox.text(nextQ.A);
 		$ABox.hide();
 		$('#right, #wrong').hide();
-		$('#showAns').show();
 	}
 	
 	function Question (Q, A, d) {

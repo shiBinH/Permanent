@@ -72,11 +72,9 @@
     	
     	<div id="edit-top-panel" class="row">
     		<div class="col text-right">
-    			<!-- html added after a save
-  				<button id="download" type="button" class="btn btn-success">
+  				<button id="download" type="button" class="noDisplay btn btn-success">
   					<img class="img-download" src="download.png">
   				</button>
-  				-->
   				<form class="noDisplay" action="download.php" method="post">
   					<input type="text" name="TestObj">
   					<input type="text" name="filename">
