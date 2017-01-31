@@ -1,4 +1,5 @@
 <?php
+  header('Content-Description: File Transfer');
   header('Content-Type: application/json');
   header('Content-Disposition: attachment; filename=' . $_POST['filename']);
   header('Expires: 0');

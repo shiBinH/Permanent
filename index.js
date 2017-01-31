@@ -259,24 +259,31 @@ $(function(){
 	function displayNextQ() {
 		$('#stats').text(nCorrect + ' / ' + QTN.length);
 		if (nCorrect === QTN.length) {
-			$QBox.text('');
-			$ABox.text('');
+			$QBox.html('');
+			$ABox.html('');
 			return;
 		}
 		var n = parseInt(Math.random() * (QTN.length-nCorrect));
 		var temp = QTN[n];
 		QTN[n] = QTN[QTN.length-nCorrect-1];
 		var nextQ = QTN[QTN.length-nCorrect-1] = temp;
-		$QBox.text(nextQ.Q);
-		$ABox.text(nextQ.A);
+		$QBox.html(nextQ.Q);
+		$ABox.html(nextQ.A);
 		$ABox.hide();
 		$('#right, #wrong').hide();
+		$('#showAns').show();
 	}
 	
 	function Question (Q, A, d) {
 		this.Q = Q;
 		this.A = A;
 		this.topic = d;
+	}
+	
+	function escapeQuotes(str) {
+		return str.replace(/['"]/g, function(ch) {
+			return ch == '\'' ? '&#39;' : '&quot;';
+		})
 	}
 	
 })

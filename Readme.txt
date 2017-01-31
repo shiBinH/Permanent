@@ -2,4 +2,6 @@ Permanent is a web application designed with the purpose of assisting the user t
 
 
 issues:
+
+- escape file contents on server
 - add a create topic function/topic class (?)
